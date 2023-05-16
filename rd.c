@@ -20,7 +20,17 @@ void bozo_sort(int *idx, int *value, int len) {
     }
 }
 
-void bubble_sort() {}
+void bubble_sort(int *idx, int *value, int len) {
+	for(int i=len-1;i>=0;i--){
+		for(int j=0;j<i;j++){
+			if (value[idx[j+1]] < value[idx[j]]){
+				int t = idx[j];
+				idx[j] = idx[j+1];
+				idx[j+1] = t;
+			}
+		}
+	}
+}
 
 void partition(int *idx, int *value, int l, int r) {
     if(l >= r) return;
