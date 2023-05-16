@@ -2,6 +2,8 @@
 
 /* Please try to figure out how to design the parameter interface of your functions by observing the given bozo sort function */
 /* Otherwise, you might suffer from rewriting your code to meet the final requirements */
+#define BUCKETCOUNT 100005
+#define PERBUCKET 1000
 
 int isSorted(int *idx, int *value, int len) {
     while (--len >= 1 ) {
@@ -68,4 +70,59 @@ void quick_sort(int *idx, int *value, int len) {
     return;
 }
 
-void bucket_sort() {}
+// Structure of a node in linked lists
+typedef struct Node {
+    int idx;
+    struct Node *next;
+} Node;
+
+void bucket_sort(int *idx, int *value, int len) {
+    // Create buckets
+    Node *buckets[BUCKETCOUNT];
+    // Initialize buckets
+    for(int i = 0; i< BUCKETCOUNT; i++) {
+        buckets[i] = NULL;
+    }
+    // Insert elements into buckets
+    for(int i = 0; i< len; i++) {
+        // Create node
+        int bucket_num = value[idx[i]] / PERBUCKET;
+        Node *new = malloc(sizeof(Node));
+        new->idx = idx[i]; new->next = NULL;
+        // Insert node
+        Node *tmp = buckets[bucket_num];
+        buckets[bucket_num] = new;
+        new->next = tmp;
+    }
+
+    // Sort the elements in each linked list
+    for(int bucket_num = 0; bucket_num< BUCKETCOUNT; bucket_num++) {
+        Node *ptr = buckets[bucket_num];
+        while(ptr != NULL) {
+            // Swap the values of the two nodes if they are out of order
+            Node *nxt = ptr->next;
+            while(nxt != NULL) {
+                // Swap the values of the two nodes if they are out of order
+                if(value[ptr->idx] > value[nxt->idx]) {
+                    int tmp = ptr->idx;
+                    ptr->idx = nxt->idx;
+                    nxt->idx = tmp;
+                }
+                nxt = nxt->next;
+            }
+            ptr = ptr->next;
+        }
+    }
+
+    // Copy the sorted elements back into the original array
+    int index = 0;
+    for (int i = 0; i< BUCKETCOUNT; i++) {
+        Node *currentNode = buckets[i];
+        while(currentNode != NULL) {
+            idx[index++] = currentNode->idx;
+            currentNode = currentNode->next;
+        }
+    }
+
+    return;
+}
