@@ -4,6 +4,7 @@
 /* Otherwise, you might suffer from rewriting your code to meet the final requirements */
 #define BUCKETCOUNT 100005
 #define PERBUCKET 1000
+#define DEBUG
 
 int isSorted(int *idx, int *value, int len) {
     while (--len >= 1 ) {
@@ -39,7 +40,7 @@ void partition(int *idx, int *value, int l, int r) {
 
     int pivot = l;
     int ptrl = l+1, ptrr = r;
-    while(ptrl <= ptrr) {
+    while(ptrl < ptrr) {
         if(value[idx[pivot]] > value[idx[ptrl]]) {
             ptrl++;
         }
@@ -56,9 +57,14 @@ void partition(int *idx, int *value, int l, int r) {
         }
     }
     // swap r pivot
-    int t = idx[ptrr];
-    idx[ptrr] = idx[pivot];
-    idx[pivot] = t;
+    if(value[idx[pivot]]>value[idx[ptrr]]){
+	    int t = idx[ptrr];
+	    idx[ptrr] = idx[pivot];
+	    idx[pivot] = t;
+	}
+	else{
+		ptrr=l;
+	}
 
     partition(idx, value, l, ptrr-1);
     partition(idx, value, ptrr+1, r);
@@ -125,4 +131,11 @@ void bucket_sort(int *idx, int *value, int len) {
     }
 
     return;
+}
+
+int main() {
+    int idx = [0, 1, 2, 3, 4, 5];
+    int value = [5, 4, 3, 2, 1, 0];
+    int len = 6;
+
 }
